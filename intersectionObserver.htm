@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #parent {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid red;
+        margin-top: 1400px;
+    }
+    
+    .child {
+        margin: 20px;
+        /* height: 30px; */
+        display: flex;
+        /* flex-wrap: wrap; */
+        overflow-x: auto;
+        border: 1px solid blue;
+        /* overflow: scroll; */
+    }
+    
+    .child img {
+        margin: 10px;
+        border-radius: 60px;
+    }
+    
+    .child li {
+        list-style-type: none;
+    }
+</style>
+
+<body>
+    <div id="parent">
+        hii
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child"></div>
+        <div class="child"></div>
+    </div>
+    <script>
+        let ul = ''
+        let observer = new IntersectionObserver((e) => {
+            // (e[0].isIntersecting) ? document.body.style.backgroundColor = 'green': document.body.style.backgroundColor = '';
+            (e[0].isIntersecting) ? (document.querySelectorAll('.child')[0].innerHTML == '') ? callApi('https://reqres.in/api/users/'): null: console.log('Element is not visible')
+        }, {
+            threshold: 0.5
+        })
+        observer.observe(document.querySelector('#parent'))
+
+
+        async function callApi(endpoint) {
+            try {
+                let res = await fetch(endpoint);
+                console.log(res)
+                res = await res.json();
+                res = res.data;
+                res.forEach((e) => {
+
+                    ul += `<li><img src='${e.avatar}'></li>`;
+
+                })
+                ul += '</ul>'
+                document.querySelectorAll('.child')[0].innerHTML = ul;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        // callApi('https://pokeapi.co/api/v2/pokemon/ditto')
+    </script>
+</body>
+
+</html>
